@@ -1,1 +1,298 @@
+#include <bits/stdc++.h> 
+using namespace std; 
+
+class Node{
+  
+  public:
+  	int data;
+  	Node* next;
+  
+};
+
+void printData(Node* node)
+{
+  
+  while(node != NULL)
+  {
+   	cout << node->data <<"\n";
+    node = node->next;
+  }
+  
+}
+
+//Insertion: Starts
+void insertFirst(Node** head_ref, int new_data)
+{
+  
+  Node* new_node = new Node();
+  
+  if(*head_ref == NULL)
+  {
+    new_node->data = new_data;
+    new_node->next = NULL;
+  }
+  else{
+  	new_node->data = new_data;
+  	new_node->next = (*head_ref);
+  	(*head_ref) = new_node;
+  }
+  
+}
+
+void insertAfter(Node* prev_node, int new_data)
+{
+  
+  Node* new_node = new Node();
+  
+  if(prev_node == NULL)
+    return;
+  
+  new_node->data = new_data;
+  new_node->next = prev_node->next;
+  prev_node->next = new_node;
+  
+}
+
+void insertLast(Node** head_ref, int new_data)
+{
+  
+  Node* new_node = new Node();
+  Node* last = *head_ref;
+  
+  new_node->data = new_data;
+  new_node->next = NULL;
+  
+  if(*head_ref == NULL)
+  {
+    last = new_node;
+    return;
+  }
+  while(last->next != NULL)
+    last = last->next;
+  
+  last->next = new_node;
+    
+}
+//Insertion: Ends
+
+//Deletion: Starts
+void deleteGiven(Node** head_ref, int new_data)
+{
+  
+  Node* temp = new Node();
+  Node* prev = new Node();
+  
+  temp = *head_ref, *prev;
+  
+  if(temp!=NULL && temp->data == new_data)
+  {
+    *head_ref = temp->next;
+    delete(temp);
+    return;
+  }
+  
+  while(temp!=NULL && temp->data != new_data)
+  {
+    prev = temp;
+    temp = temp->next;
+  }
+  
+  if(temp == NULL)
+  	return;
+  
+  prev->next = temp->next;
+  delete(temp);
+  
+}
+
+void deleteAtPosition(Node** head_ref, int pos)
+{
+  
+  Node* temp = new Node();
+  Node* next = new Node();
+  
+  temp = *head_ref;
+  
+  if(pos == 0)
+  {
+    *head_ref = temp->next;
+    delete(temp);
+    return;
+  }
+  
+  for(int i=0; temp!=NULL && i<pos-1; i++)
+  {
+    temp = temp->next;
+  }
+  
+  if(temp == NULL || temp->next == NULL)
+    return;
+  
+  next = temp->next->next;
+  
+  delete(temp->next);
+  temp->next = next;
+}
+
+void deleteList(Node** head_ref)
+{
+  
+  Node* current = new Node();
+  Node* next = new Node();
+  
+  current = *head_ref;
+  
+  while(current != NULL)
+  {
+    next = current->next;
+    delete(current);
+    current = next;
+  }
+  
+  *head_ref = NULL;
+  
+}
+//Deletion: Ends
+
+int countList(Node* head)
+{
+  
+  int count = 0;
+  
+  if(head == NULL)
+    return 0;
+  
+  while(head != NULL)
+  {
+    count++;
+    head = head->next;
+  }
+  
+  return count;
+  
+}
+
+void searchNode(Node* head, int search_data)
+{
+  
+  int pos = 1;
+  while(head != NULL)
+  {
+    if(head->data == search_data)
+    {
+      cout << "\n Element " << search_data << " found at position: " << pos;
+      return;
+    }
+    head = head->next;
+    pos++;
+  }
+  
+  cout << "\nElement " << search_data << " is not found\n";
+  return;
+    
+}
+
+int NthNode(Node* head, int index)
+{
+  
+  int pos = 0;
+  while(head != NULL)
+  {
+    if(pos == index)
+    {
+      return head->data;
+    }
+    
+    pos++;
+    head = head->next;
+  }
+  
+  return 0;
+}
+
+void NthElementFromLast(Node* head, int index)
+{
+  
+  Node* temp = new Node();
+  
+  temp = head;
+  int len = 0;
+  while(temp != NULL)
+  {
+	temp = temp->next;
+    len++;
+  }
+  
+  if(index > len)
+  {
+    cout<< "\n Error : Index position is wrong\n";
+    return;
+  }
+  temp = head;
+  for(int i=1; i < len-index+1; i++)
+  {
+    temp = temp->next;
+  }
+  
+  head->data = temp->data;
+  
+  cout<<"NthElementFromLast - Index: "<< index <<" element: " << head->data;
+  
+}
+
+int main()
+{
+  
+  Node* head = new Node();
+  Node* second = new Node();
+  Node* third = new Node();
+  
+  int indexVal = 3;
+  
+  head->data = 1;
+  head->next = second;
+  
+  second->data = 2;
+  second->next = third;
+  
+  third->data = 3;
+  third->next = NULL;
+  
+  cout<< "\n Nodes before Insertion \n";
+  printData(head);
+  
+  insertFirst(&head, 7);
+  insertAfter(head->next, 5);
+  insertLast(&head, 9);
+  
+  cout<< "\n Nodes after Insertion \n";
+  printData(head);
+  
+  deleteGiven(&head, 7);
+  
+  cout<< "\n Nodes after deletion \n";
+  printData(head);
+  
+  deleteAtPosition(&head, 3);
+  
+  cout<< "\n Nodes after deletion at position: \n";
+  printData(head);
+  
+  cout<< "\n Number of nodes in the list: " << countList(head);
+  
+  searchNode(head, 5);
+  
+  cout << "\n Element at Index: " << indexVal <<  " is: " << NthNode(head, indexVal);
+  
+  NthElementFromLast(head, 3);
+  
+  deleteList(&head);
+  cout<< "\n After deleting List \n";
+  
+  printData(head);
+  
+  return 0;
+  
+}
+
 
